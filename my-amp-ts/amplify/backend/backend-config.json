@@ -1,1 +1,8 @@
-{}
+{
+	"auth": {
+		"cognito2b535dfb": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation"
+		}
+	}
+}

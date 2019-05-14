@@ -1,14 +1,19 @@
 {
-  "test": {
-    "awscloudformation": {
-      "AuthRoleName": "my-amp-ts-test-20190514110049-authRole",
-      "UnauthRoleArn": "arn:aws:iam::906868464633:role/my-amp-ts-test-20190514110049-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::906868464633:role/my-amp-ts-test-20190514110049-authRole",
-      "Region": "eu-west-1",
-      "DeploymentBucketName": "my-amp-ts-test-20190514110049-deployment",
-      "UnauthRoleName": "my-amp-ts-test-20190514110049-unauthRole",
-      "StackName": "my-amp-ts-test-20190514110049",
-      "StackId": "arn:aws:cloudformation:eu-west-1:906868464633:stack/my-amp-ts-test-20190514110049/28a4cbe0-762f-11e9-bb71-06805a56c612"
+    "test": {
+        "awscloudformation": {
+            "AuthRoleName": "my-amp-ts-test-20190514111611-authRole",
+            "UnauthRoleArn": "arn:aws:iam::906868464633:role/my-amp-ts-test-20190514111611-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::906868464633:role/my-amp-ts-test-20190514111611-authRole",
+            "Region": "eu-west-1",
+            "DeploymentBucketName": "my-amp-ts-test-20190514111611-deployment",
+            "UnauthRoleName": "my-amp-ts-test-20190514111611-unauthRole",
+            "StackName": "my-amp-ts-test-20190514111611",
+            "StackId": "arn:aws:cloudformation:eu-west-1:906868464633:stack/my-amp-ts-test-20190514111611/4d1297d0-7631-11e9-b391-0293ecc0419e"
+        },
+        "categories": {
+            "auth": {
+                "cognito2b535dfb": {}
+            }
+        }
     }
-  }
 }

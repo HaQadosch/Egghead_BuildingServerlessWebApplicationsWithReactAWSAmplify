@@ -20,7 +20,6 @@
   "homepage": "https://github.com/HaQadosch/Egghead_BuildingServerlessWebApplicationsWithReactAWSAmplify#readme",
   "dependencies": {
     "@aws-amplify/cli": "^1.6.8",
-    "create-react-app": "^3.0.1",
     "husky": "^2.2.0",
     "npm": "^6.9.0",
     "prettier": "^1.17.1",
