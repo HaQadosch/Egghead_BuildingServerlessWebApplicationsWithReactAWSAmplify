@@ -1,0 +1,23 @@
+{
+  "name": "Egghead_BuildingServerlessWebApplicationsWithReactAWSAmplify",
+  "version": "1.0.0",
+  "description": "https://egghead.io/courses/building-serverless-web-applications-with-react-aws-amplify",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HaQadosch/Egghead_BuildingServerlessWebApplicationsWithReactAWSAmplify.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HaQadosch/Egghead_BuildingServerlessWebApplicationsWithReactAWSAmplify/issues"
+  },
+  "homepage": "https://github.com/HaQadosch/Egghead_BuildingServerlessWebApplicationsWithReactAWSAmplify#readme",
+  "dependencies": {
+    "@aws-amplify/cli": "^1.6.8"
+  }
+}
