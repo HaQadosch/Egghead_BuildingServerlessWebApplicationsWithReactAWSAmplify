@@ -1,10 +1,13 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useState, useEffect } from 'react';
 import { produce } from 'immer'
 import './App.css';
 
 // import { withAuthenticator } from 'aws-amplify-react'
-import { Auth } from 'aws-amplify'
-
+import { Auth, API, graphqlOperation } from 'aws-amplify'
+import { listTodos } from './graphql/queries'
+import { ListTodosQuery } from './API'
+import { GraphQLResult } from '@aws-amplify/api/lib/types';
+import { NumericLiteral } from 'babel-types';
 interface AuthType {
   readonly userName: string,
   readonly password: string,
@@ -32,6 +35,24 @@ const authReducer = (prevState: AuthType, newState: Object): AuthType => {
 
 const App: React.FC = () => {
   const [{ userName, password, email, phone, authCode, step }, setState] = useReducer(authReducer, initState)
+  const [todos, setTodos] = useState()
+
+  useEffect(() => {
+    let didCancel = false
+
+    async function fetchAPI() {
+      const result = await API.graphql(graphqlOperation(listTodos))
+      if (!didCancel) {
+        // setTodos(result.data.listTodos.items)
+        setTodos(result)
+      }
+    }
+
+    fetchAPI()
+    return () => {
+      didCancel = true
+    }
+  }, [])
 
   const signUp = async () => {
     try {
@@ -62,24 +83,35 @@ const App: React.FC = () => {
       <header className="App-header">
         {
           step === 0 ? <form onSubmit={e => { e.preventDefault(); signUp() }} >
-            <input placeholder="name" type="text" onChange={inputChange('userName')} name="userName" />
-            <input placeholder="password" type="password" onChange={inputChange('password')} name="password" />
-            <input placeholder="email" type="email" onChange={inputChange('email')} name="email" />
-            <input placeholder="phone number" type="tel" onChange={inputChange('phone')} name="phoneNumber" />
+            <input placeholder="name" type="text" onChange={inputChange('userName')} name="userName" value={userName} />
+            <input placeholder="password" type="password" onChange={inputChange('password')} name="password" value={password} />
+            <input placeholder="email" type="email" onChange={inputChange('email')} name="email" value={email} />
+            <input placeholder="phone number" type="tel" onChange={inputChange('phone')} name="phoneNumber" value={phone} />
             <button type="submit">Sign Up</button>
           </form> :
             step === 1 ? <form onSubmit={e => { e.preventDefault(); confirmSignUp() }} >
-              <input placeholder="name" type="text" onChange={inputChange('userName')} name="userName" />
-              <input placeholder="authentication code" type="text" onChange={inputChange('authCode')} name="authCode" />
+              <input placeholder="name" type="text" onChange={inputChange('userName')} name="userName" value={userName} />
+              <input placeholder="authentication code" type="text" onChange={inputChange('authCode')} name="authCode" value={authCode} />
               <button type="submit">Confirm</button>
             </form> :
               <form>
 
-              </form>}
+              </form>
+        }
+        <hr />
+        <div>
+          {/* <pre>{JSON.stringify(todos, null, 2)}</pre> */}
+          <ul>
+            {todos
+              ? todos.data.listTodos.items.map(({ name, description, completed }: { name: string, description: string, completed: boolean }, index: number) => <li key={index} >{`${name}: ${description} => ${completed}`}</li>)
+              : <li>Empty list</li>
+            }
+          </ul>
+        </div>
       </header>
     </div>
   );
 }
 
-// export default withAuthenticator(App, { includeGreetings: true })
 export default App
+// export default withAuthenticator(App, { includeGreetings: true })
