@@ -1,0 +1,37 @@
+{
+    "paths": [
+        {
+            "name": "/people",
+            "lambdaFunction": "peopleFunction",
+            "privacy": {
+                "private": true,
+                "auth": [
+                    "/GET"
+                ]
+            }
+        }
+    ],
+    "resourceName": "people",
+    "apiName": "people",
+    "functionArns": [
+        {
+            "lambdaFunction": "peopleFunction"
+        }
+    ],
+    "privacy": {
+        "auth": 1,
+        "unauth": 0,
+        "authRoleName": "my-amp-ts-test-20190514111611-authRole",
+        "unAuthRoleName": "my-amp-ts-test-20190514111611-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "peopleFunction",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

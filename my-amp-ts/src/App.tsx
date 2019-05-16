@@ -2,12 +2,10 @@ import React, { useReducer, useState, useEffect } from 'react';
 import { produce } from 'immer'
 import './App.css';
 
-// import { withAuthenticator } from 'aws-amplify-react'
-import { Auth, API, graphqlOperation } from 'aws-amplify'
+import { withAuthenticator } from 'aws-amplify-react'
+import { Auth, API, graphqlOperation, Storage } from 'aws-amplify'
 import { listTodos } from './graphql/queries'
-import { ListTodosQuery } from './API'
-import { GraphQLResult } from '@aws-amplify/api/lib/types';
-import { NumericLiteral } from 'babel-types';
+
 interface AuthType {
   readonly userName: string,
   readonly password: string,
@@ -36,6 +34,8 @@ const authReducer = (prevState: AuthType, newState: Object): AuthType => {
 const App: React.FC = () => {
   const [{ userName, password, email, phone, authCode, step }, setState] = useReducer(authReducer, initState)
   const [todos, setTodos] = useState()
+  const [people, setPeople] = useState([])
+  const [fileS3, setFileS3] = useState<{ fileURL: string, fileName: string, file: File | string }>()
 
   useEffect(() => {
     let didCancel = false
@@ -43,12 +43,19 @@ const App: React.FC = () => {
     async function fetchAPI() {
       const result = await API.graphql(graphqlOperation(listTodos))
       if (!didCancel) {
-        // setTodos(result.data.listTodos.items)
         setTodos(result)
       }
     }
 
+    async function fetchRestAPI() {
+      const result = await API.get('people', '/people', {})
+      if (!didCancel) {
+        setPeople(result)
+      }
+    }
+
     fetchAPI()
+    fetchRestAPI()
     return () => {
       didCancel = true
     }
@@ -78,6 +85,34 @@ const App: React.FC = () => {
     setState({ [field]: e.currentTarget.value })
   }
 
+  const handleFile = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    const file = evt.target.files ? evt.target.files[0] : null
+    if (file) {
+      setFileS3({
+        fileURL: URL.createObjectURL(file),
+        file,
+        fileName: file.name
+      })
+    }
+  }
+
+  const saveFile = () => {
+    if (fileS3) {
+      Storage.put(fileS3.fileName, fileS3.file)
+        .then(() => {
+          console.log('File succesfully saved')
+          setFileS3({
+            fileName: '',
+            file: '',
+            fileURL: ''
+          })
+        })
+        .catch(err => {
+          console.log('oups: ', err)
+        })
+    }
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -100,7 +135,6 @@ const App: React.FC = () => {
         }
         <hr />
         <div>
-          {/* <pre>{JSON.stringify(todos, null, 2)}</pre> */}
           <ul>
             {todos
               ? todos.data.listTodos.items.map(({ name, description, completed }: { name: string, description: string, completed: boolean }, index: number) => <li key={index} >{`${name}: ${description} => ${completed}`}</li>)
@@ -108,10 +142,24 @@ const App: React.FC = () => {
             }
           </ul>
         </div>
+        <hr />
+        <div>
+          <pre>{JSON.stringify(people, null, 2)}</pre>
+          {/* <ul>
+            {people
+              ? people.map(({ name, homeworld }: { name: string, homeworld: string }, index: number) => <li key={index} >{`${name}: ${homeworld} `}</li>)
+              : <li>Empty list</li>
+            }
+          </ul> */}
+        </div>
+        <hr />
+        <input type="file" name="fileS3" id="fileS3" onChange={handleFile} />
+        <img src={fileS3 ? fileS3.fileURL : ''} alt="selected file" />
+        <button onClick={saveFile} >Save file</button>
       </header>
     </div>
   );
 }
 
-export default App
-// export default withAuthenticator(App, { includeGreetings: true })
+// export default App
+export default withAuthenticator(App, { includeGreetings: true })

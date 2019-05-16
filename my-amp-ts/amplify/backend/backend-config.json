@@ -12,6 +12,34 @@
 			"output": {
 				"securityType": "API_KEY"
 			}
+		},
+		"people": {
+			"service": "API Gateway",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "function",
+					"resourceName": "peopleFunction",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				}
+			]
+		}
+	},
+	"function": {
+		"peopleFunction": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": []
+		}
+	},
+	"storage": {
+		"s3742d37b3": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
 		}
 	}
 }
